@@ -1,8 +1,7 @@
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
-import { Request, Response } from "express";
-import { userSchema } from "../middleware/joiValidation.js";
+import { RequestHandler } from "express";
 import { addUser, fetchUser } from "../models/userModel.js";
 import { NewUser } from "../utils/interface.js";
 import {
@@ -12,14 +11,13 @@ import {
   tokenExpiry,
 } from "../config/config.js";
 
-export const signupUser = async (req: Request, res: Response) => {
+export const signupUser: RequestHandler = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const existingUser = await fetchUser(email);
     if (existingUser) {
-      return res
-        .status(400)
-        .json({ error: "Denna e-post finns redan registrerad" });
+      res.status(400).json({ error: "Denna e-post finns redan registrerad" });
+      return;
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -34,20 +32,23 @@ export const signupUser = async (req: Request, res: Response) => {
     res.status(201).json(savedUser);
   } catch (error) {
     res.status(500).json({ error: "Kunde inte spara användare" });
+    return;
   }
 };
 
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser: RequestHandler = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await fetchUser(email);
     if (!user) {
-      return res.status(401).json({ error: "Ogiltig epost eller lösenord" });
+      res.status(401).json({ error: "Ogiltig epost eller lösenord" });
+      return;
     }
 
     const matchedPassword = await bcrypt.compare(password, user.password);
     if (!matchedPassword) {
-      return res.status(401).json({ error: "Ogiltig epost eller lösenord" });
+      res.status(401).json({ error: "Ogiltig epost eller lösenord" });
+      return;
     }
 
     const token = jwt.sign({ id: user.id, email: user.email }, jwtSecret, {
@@ -71,8 +72,10 @@ export const loginUser = async (req: Request, res: Response) => {
         refreshToken: refreshToken,
       },
     });
+    return;
   } catch (error) {
     console.error("Inloggningsfel: ", error);
     res.status(500).json({ error: "Inloggningsfel" });
+    return;
   }
 };

@@ -1,12 +1,7 @@
-import Datastore from "nedb-promise";
-import path from "path";
-import { fileURLToPath } from "url";
+import Datastore from "nedb-promises";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const notesDB = new Datastore({
-  filename: path.join(__dirname, "..", "db", "notes.db"),
+const notesDB = Datastore.create({
+  filename: "../db/notes.db",
   autoload: true,
 });
 

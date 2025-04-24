@@ -5,10 +5,10 @@ import {
   deleteNote,
   findNotes,
 } from "../models/noteModel.js";
-import { Request, Response } from "express";
+import { RequestHandler } from "express";
 
 //Get all notes by userId
-export const getNotes = async (req: Request, res: Response) => {
+export const getNotes: RequestHandler = async (req, res, next) => {
   try {
     const { id: userId } = req.user;
 
@@ -26,7 +26,7 @@ export const getNotes = async (req: Request, res: Response) => {
 };
 
 //Create a new note
-export const createNote = async (req: Request, res: Response) => {
+export const createNote: RequestHandler = async (req, res, next) => {
     try {
         
     } catch (error) {
@@ -35,7 +35,7 @@ export const createNote = async (req: Request, res: Response) => {
 }
 
 //Change an existing note
-export const adjustNote = async (req: Request, res: Response) => {
+export const adjustNote: RequestHandler = async (req, res, next) => {
     try {
         
     } catch (error) {
@@ -44,7 +44,7 @@ export const adjustNote = async (req: Request, res: Response) => {
 }
 
 //Delete a note
-export const removeNote = async (req: Request, res: Response) => {
+export const removeNote: RequestHandler = async (req, res, next) => {
     try {
         
     } catch (error) {
@@ -53,7 +53,7 @@ export const removeNote = async (req: Request, res: Response) => {
 }
 
 //Search notes
-export const searchNotes = async (req: Request, res: Response) => {
+export const searchNotes: RequestHandler = async (req, res, next) => {
     try {
         
     } catch (error) {

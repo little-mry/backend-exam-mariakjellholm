@@ -1,11 +1,6 @@
-import { Request, Response } from "express";
+import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
-import {
-  refreshSecret,
-  refreshExpiry,
-  jwtSecret,
-  tokenExpiry,
-} from "../config/config.js";
+import { refreshSecret, jwtSecret, tokenExpiry } from "../config/config.js";
 import type { JwtPayload } from "jsonwebtoken";
 
 interface MyTokenPayload extends JwtPayload {
@@ -13,14 +8,15 @@ interface MyTokenPayload extends JwtPayload {
   email: string;
 }
 
-export const refreshToken = async (req: Request, res: Response) => {
+export const refreshToken: RequestHandler = async (req, res, next) => {
   const refresh = req.body.refreshToken;
   if (!refresh) throw new Error("Refresh-token saknas!");
 
   try {
     const payload = jwt.verify(refresh, refreshSecret) as MyTokenPayload;
     if (typeof payload === "string") {
-      return res.status(401).json({ error: "Ogiltig refresh-token" });
+      res.status(401).json({ error: "Ogiltig refresh-token" });
+      return;
     }
 
     const newAccessToken = jwt.sign(
@@ -28,8 +24,13 @@ export const refreshToken = async (req: Request, res: Response) => {
       jwtSecret,
       { expiresIn: tokenExpiry }
     );
-    res.status(201).json({ newAccessToken });
+    res.status(201).json({
+      success: true,
+      accessToken: newAccessToken,
+    });
+    return
   } catch (error) {
     res.status(401).json({ error: "Ogiltig refresh-token" });
+    return;
   }
 };
