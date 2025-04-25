@@ -1,12 +1,13 @@
 import { Schema } from "joi";
-import { Request, Response, NextFunction } from "express";
+import { RequestHandler } from "express";
 
-const validate = (schema: Schema, property: "body" | "query" | "params") => {
-  return (req: Request, res: Response, next: NextFunction) => {
+const validate = (schema: Schema, property: "body" | "query" | "params"): RequestHandler => {
+  return (req, res, next): void => {
     const { error } = schema.validate(req[property]);
     if (error) {
       const errors = error.details.map((detail) => detail.message);
-      return res.status(400).json({ errors });
+      res.status(400).json({ errors });
+      return 
     }
     next();
   };

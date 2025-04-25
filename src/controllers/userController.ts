@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
 import { RequestHandler } from "express";
 import { addUser, fetchUser } from "../models/userModel.js";
-import { NewUser } from "../utils/interface.js";
+import { DBUser, NewUser } from "../utils/interface.js";
 import {
   jwtSecret,
   refreshExpiry,
@@ -22,14 +22,25 @@ export const signupUser: RequestHandler = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user: NewUser = {
-      id: uuidv4(),
+      _id: uuidv4(),
       email,
       password: hashedPassword,
       createdAt: new Date().toISOString(),
     };
 
     const savedUser = await addUser(user);
-    res.status(201).json(savedUser);
+    if (!savedUser) {
+      res.status(500).json({ error: "Kunde inte spara användare" });
+      return;
+    }
+
+    res.status(201).json({
+      id:      savedUser._id,
+      email:   savedUser.email,
+      password: savedUser.password,
+      createdAt: savedUser.createdAt
+    })   
+
   } catch (error) {
     res.status(500).json({ error: "Kunde inte spara användare" });
     return;

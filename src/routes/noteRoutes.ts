@@ -6,10 +6,10 @@ import { noteSchema } from "../middleware/joiValidation.js";
 
 const router = Router();
 
-router.get('/notes', getNotes)
-router.post('/notes', createNote)
-router.put('/notes', adjustNote)
-router.delete('/notes', removeNote)
-router.get('/notes/search', searchNotes)
+router.get('/notes', auth, getNotes)
+router.post('/notes', auth, validate(noteSchema, 'body'), createNote)
+router.put('/notes', auth, validate(noteSchema, 'body'), adjustNote)
+router.delete('/notes', auth, validate(noteSchema, 'params'), removeNote)
+router.get('/notes/search', auth, validate(noteSchema, 'query'), searchNotes)
 
 export default router
