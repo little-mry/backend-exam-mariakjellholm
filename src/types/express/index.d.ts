@@ -1,10 +1,14 @@
-import 'express';
+export {};
+import "express";
+
+declare module 'express-serve-static-core' {
+  interface Request {
+    user: { id: string };
+  }
+}
 
 declare module 'express' {
-  interface User {
-    id: string;
-  }
   interface Request {
-    user: User;
+    user: { id: string };
   }
 }

@@ -2,10 +2,6 @@
   "name": "backend-swingnotes",
   "version": "1.0.0",
   "description": "",
-  "homepage": "https://github.com/little-mry/backend-exam-mariakjellholm#readme",
-  "bugs": {
-    "url": "https://github.com/little-mry/backend-exam-mariakjellholm/issues"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/little-mry/backend-exam-mariakjellholm.git"
@@ -18,8 +14,7 @@
     "rimraf": "^4.0.0"
   },
   "scripts": {
-    "dev": "node --loader ts-node/esm --experimental-specifier-resolution=node ./src/server.ts",
-    "hello": "node --loader ts-node/esm --experimental-specifier-resolution=node ./src/hello.ts"
+    "dev": "node --loader ts-node/esm --experimental-specifier-resolution=node ./src/server.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

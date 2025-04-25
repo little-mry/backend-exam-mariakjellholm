@@ -1,9 +1,15 @@
 import Datastore from "nedb-promises";
 import type Nedb from "nedb-promises";
 import { User, DBUser, NewUser } from "../utils/interface.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const dbPath = path.resolve(__dirname, '..', '..', 'db', 'users.db')
 const rawDB = Datastore.create({
-  filename: "../db/users.db",
+  filename: dbPath,
   autoload: true,
 });
 

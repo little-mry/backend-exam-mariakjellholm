@@ -15,9 +15,11 @@ export interface User {
 }
 
 export interface Note {
+  userId: string;
   id: string;
   title: string;
   text: string;
   createdAt: Date;
   modifiedAt: Date;
 }
+
