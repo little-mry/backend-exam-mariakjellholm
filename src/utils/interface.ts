@@ -16,10 +16,12 @@ export interface User {
 
 export interface Note {
   userId: string;
-  id: string;
+  _id: string;
   title: string;
   text: string;
-  createdAt: Date;
-  modifiedAt: Date;
+  createdAt: string;
+  modifiedAt: string;
 }
+
+export interface DBNote extends Note {}
 

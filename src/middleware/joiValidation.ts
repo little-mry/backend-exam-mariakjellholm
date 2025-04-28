@@ -25,7 +25,7 @@ export const noteSchema = joi.object({
 });
 
 export const noteIdSchema = joi.object({
-  id: joi
+  _id: joi
     .string()
     .guid({ version: ["uuidv4"] })
     .required()
@@ -34,4 +34,11 @@ export const noteIdSchema = joi.object({
       "string.guid": "Ogiltigt format, förväntas ett giltigt UUID.",
       "any.required": "Id:t är obligatoriskt.",
     }),
+});
+
+export const searchSchema = joi.object({
+  q: joi.string().trim().min(1).required().messages({
+    "string.empty": "Sökningen får inte vara tom.",
+    "string.min": "Sökningen måste vara bestå av minst 1 tecken.",
+  }),
 });

@@ -1,12 +1,14 @@
 import {
   fetchNotes,
   addNote,
-  changeNote,
   deleteNote,
   findNotes,
+  updateNoteById,
 } from "../models/noteModel.js";
 import { RequestHandler } from "express";
 import { Note } from "../utils/interface.js";
+import { v4 as uuidv4 } from "uuid";
+import { error } from "console";
 
 //Get all notes by userId
 export const getNotes: RequestHandler = async (req, res, next) => {
@@ -33,13 +35,15 @@ export const createNote: RequestHandler = async (req, res, next) => {
     const { id } = req.user;
 
     const newNote: Note = {
-      ...req.body,
+      title,
+      text,
       createdAt: new Date().toISOString(),
       modifiedAt: new Date().toISOString(),
+      _id: uuidv4(),
       userId: id,
     };
     const createdNote = await addNote(newNote);
-  
+
     res.status(201).json({
       success: true,
       message: "Anteckning skapad",
@@ -55,17 +59,78 @@ export const createNote: RequestHandler = async (req, res, next) => {
 //Change an existing note
 export const adjustNote: RequestHandler = async (req, res, next) => {
   try {
-  } catch (error) {}
+    const { _id } = req.params;
+    const { title, text } = req.body;
+    const { id } = req.user;
+
+    const adjustedNote = await updateNoteById(_id, id, { title, text });
+
+    if (!adjustedNote) {
+      res.status(404).json({
+        success: false,
+        message:
+          "Ingen anteckning hittades med det här id:t för den inloggade användaren.",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Uppdateringen lyckades",
+      data: adjustedNote,
+    });
+    return;
+  } catch (error) {
+    console.error("Fel vid uppdatering av anteckning", error);
+    res.status(500).json({ error: "Fel vid uppdatering av anteckning" });
+  }
 };
 
 //Delete a note
 export const removeNote: RequestHandler = async (req, res, next) => {
   try {
-  } catch (error) {}
+    const { _id } = req.params;
+    const { id } = req.user;
+
+    const numRemoved = await deleteNote(_id, id);
+    if (numRemoved === 0) {
+      res.status(404).json({ error: "Ingen anteckning har raderats" });
+      return;
+    }
+
+    res.set("X-Message", "Note successfully removed").sendStatus(204);
+  } catch (error) {
+    console.error("Fel vid borttagning av anteckning", error);
+    res.status(500).json({ error: "Fel vid borttagning av anteckning" });
+  }
 };
 
 //Search notes
 export const searchNotes: RequestHandler = async (req, res, next) => {
   try {
-  } catch (error) {}
+    const { q } = req.query;
+    let searchTerm: string;
+
+    if (typeof q === "string") {
+      searchTerm = q;
+    } else if (Array.isArray(q) && typeof q[0] === "string") {
+      searchTerm = q[0];
+    } else {
+      searchTerm = "";
+    }
+
+    const foundNotes = await findNotes(searchTerm);
+    if (foundNotes.length === 0) {
+      res.status(404).json({ error: "Inga anteckningar hittades" });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      data: foundNotes,
+    });
+  } catch (error) {
+    console.error("Fel vid sökning", error);
+    res.status(500).json({ error: "Fel vid sökning" });
+  }
 };
