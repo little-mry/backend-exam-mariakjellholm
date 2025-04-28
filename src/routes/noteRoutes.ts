@@ -8,7 +8,12 @@ import {
 } from "../controllers/noteController.js";
 import auth from "../middleware/auth.js";
 import validate from "../middleware/validate.js";
-import { noteIdSchema, noteSchema, searchSchema } from "../middleware/joiValidation.js";
+import {
+  noteIdSchema,
+  noteSchema,
+  noteUpdateSchema,
+  searchSchema,
+} from "../middleware/joiValidation.js";
 
 const router = Router();
 
@@ -18,7 +23,7 @@ router.patch(
   "/notes/:_id",
   auth,
   validate(noteIdSchema, "params"),
-  validate(noteSchema, "body"),
+  validate(noteUpdateSchema, "body"),
   adjustNote
 );
 router.delete(

@@ -24,6 +24,12 @@ export const noteSchema = joi.object({
   }),
 });
 
+export const noteUpdateSchema = joi.object({
+  title: joi.string().allow("").optional(),
+  text : joi.string().allow("").optional(),
+})
+.or("title", "text")
+
 export const noteIdSchema = joi.object({
   _id: joi
     .string()

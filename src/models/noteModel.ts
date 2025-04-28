@@ -45,15 +45,21 @@ export const updateNoteById = async (
   updates: { title: string; text: string }
 ): Promise<DBNote | null> => {
   const findNote = await notesDB.findOne({ _id: noteId, userId: userId });
-  if (!findNote) {
-    return null;
-  }
+  if (!findNote) return null;
 
   const modifiedAt = new Date().toISOString();
+  const setFields: Record<string, any> = { modifiedAt };
+
+  if (updates.title !== undefined && updates.title !== "") {
+    setFields.title = updates.title;
+  }
+  if (updates.text !== undefined && updates.text !== "") {
+    setFields.text = updates.text;
+  }
 
   const changeNote = await notesDB.update(
     { _id: noteId, userId },
-    { $set: { ...updates, modifiedAt } },
+    { $set: setFields },
     { returnUpdatedDocs: true }
   );
   if (!changeNote) {
