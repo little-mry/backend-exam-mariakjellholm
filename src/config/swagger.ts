@@ -1,7 +1,7 @@
 import swaggerJSDoc from "swagger-jsdoc";
 import { Options } from "swagger-jsdoc";
 
-const swaggerDefinition: Options = {
+const swaggerDefinition = {
   openapi: "3.0.0",
   info: {
     title: "Swingnotes API",
@@ -37,7 +37,7 @@ const swaggerDefinition: Options = {
       AuthorizationHeader: {
         name: "Authorization",
         in: "header",
-        description: "JWT-token, prefixa med `Bearer `",
+        description: "JWT-token",
         required: true,
         schema: {
           type: "string",
@@ -491,7 +491,11 @@ const swaggerDefinition: Options = {
       },
     },
   },
+};
+
+const options: Options = {
+  swaggerDefinition,
   apis: [],
 };
 
-export const swaggerDocs = swaggerJSDoc(swaggerDefinition);
+export const swaggerDocs = swaggerJSDoc(options);
