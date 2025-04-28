@@ -35,10 +35,14 @@ export const signupUser: RequestHandler = async (req, res, next) => {
     }
 
     res.status(201).json({
-      id:      savedUser._id,
-      email:   savedUser.email,
-      password: savedUser.password,
-      createdAt: savedUser.createdAt
+      success: true,
+      message: "Användare skapad",
+      data: {
+        id:      savedUser._id,
+        email:   savedUser.email,
+        password: savedUser.password,
+        createdAt: savedUser.createdAt
+      }
     })   
 
   } catch (error) {
@@ -58,7 +62,7 @@ export const loginUser: RequestHandler = async (req, res, next) => {
 
     const matchedPassword = await bcrypt.compare(password, user.password);
     if (!matchedPassword) {
-      res.status(401).json({ error: "Ogiltig epost eller lösenord" });
+      res.status(400).json({ error: "Ogiltig epost eller lösenord" });
       return;
     }
 

@@ -8,7 +8,7 @@ import {
 import { RequestHandler } from "express";
 import { Note } from "../utils/interface.js";
 import { v4 as uuidv4 } from "uuid";
-import { error } from "console";
+
 
 //Get all notes by userId
 export const getNotes: RequestHandler = async (req, res, next) => {
@@ -18,7 +18,7 @@ export const getNotes: RequestHandler = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: "Hämtning av anteckningar lyckades",
+      message: "Lyckad hämtning av anteckningar",
       data: userNotes,
     });
     return;
@@ -74,9 +74,9 @@ export const adjustNote: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    res.status(200).json({
+    res.status(201).json({
       success: true,
-      message: "Uppdateringen lyckades",
+      message: "Anteckning uppdaterad",
       data: adjustedNote,
     });
     return;
@@ -127,6 +127,7 @@ export const searchNotes: RequestHandler = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
+      message: "Sökningen lyckades",
       data: foundNotes,
     });
   } catch (error) {
