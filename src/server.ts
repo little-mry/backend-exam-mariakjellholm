@@ -4,8 +4,6 @@ import swaggerUi from "swagger-ui-express";
 (async () => {
   try {
     await import("./config/config.js");
-    console.log("🔎 server.ts har laddats");
-
     const userRoute = (await import("./routes/userRoutes.js")).default;
     const noteRoute = (await import("./routes/noteRoutes.js")).default;
     const { swaggerDocs } = await import("./config/swagger.js");

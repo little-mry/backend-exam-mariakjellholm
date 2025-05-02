@@ -108,6 +108,7 @@ export const removeNote: RequestHandler = async (req, res, next) => {
 //Search notes
 export const searchNotes: RequestHandler = async (req, res, next) => {
   try {
+    const { id } = req.user;
     const { q } = req.query;
     let searchTerm: string;
 
@@ -119,7 +120,7 @@ export const searchNotes: RequestHandler = async (req, res, next) => {
       searchTerm = "";
     }
 
-    const foundNotes = await findNotes(searchTerm);
+    const foundNotes = await findNotes(id, searchTerm);
     if (foundNotes.length === 0) {
       res.status(404).json({ error: "Inga anteckningar hittades" });
       return;

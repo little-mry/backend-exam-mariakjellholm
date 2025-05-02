@@ -79,8 +79,9 @@ export const deleteNote = async (noteId: string, userId: string) => {
 };
 
 //Finds notes from the database, by a searchstring
-export const findNotes = async (searchString: string): Promise<DBNote[]> => {
+export const findNotes = async (userId: string, searchString: string): Promise<DBNote[]> => {
   const foundNotes = await notesDB.find({
+    userId,
     $or: [
       { title: { $regex: new RegExp(searchString, "i") } },
       { text: { $regex: new RegExp(searchString, "i") } },

@@ -250,7 +250,7 @@ const swaggerDefinition = {
         },
       },
     },
-    "/api/user/signin": {
+    "/api/user/login": {
       post: {
         tags: ["User"],
         description: "Loggar in en användare",
